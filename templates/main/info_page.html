@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title }} | QuessCorp{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'main/css/info.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="info-hero">
+    <div class="container-fluid site-container">
+        <span class="info-kicker">QuessCorp</span>
+        <h1>{{ page.title }}</h1>
+        <p class="info-subtitle">{{ page.subtitle }}</p>
+    </div>
+</section>
+
+<section class="info-body">
+    <div class="container-fluid site-container info-grid">
+        <div class="info-copy">
+            <p>{{ page.description }}</p>
+        </div>
+        <div class="info-card">
+            <h3>Highlights</h3>
+            <ul>
+                {% for item in page.bullets %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="info-cta">
+    <div class="container-fluid site-container">
+        <div class="cta-card">
+            <div>
+                <h3>Ready to connect?</h3>
+                <p>Talk to our team about staffing solutions and partnerships.</p>
+            </div>
+            <a class="btn btn-warning" href="{% url 'contact_us' %}">Contact Us</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

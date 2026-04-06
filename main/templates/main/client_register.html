@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Registration</title>
+
+    <!-- Google Fonts for Luxury Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'main/css/client_register.css' %}">
+</head>
+<body>
+
+<div>
+    <h2>Client Registration</h2>
+    {% if messages %}
+        <div class="form-errors">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        
+        <label>Username</label>
+        <input name="username" type="text" placeholder="Enter username" value="{{ form_data.username|default:'' }}">
+
+        <label>Password</label>
+        <input name="password" type="password" placeholder="Enter password">
+
+        <label>Company Name</label>
+        <input name="company" type="text" placeholder="Enter company name" value="{{ form_data.company|default:'' }}">
+
+        <label>Phone</label>
+        <input name="phone" type="text" placeholder="Enter phone number" value="{{ form_data.phone|default:'' }}">
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+</body>
+</html>

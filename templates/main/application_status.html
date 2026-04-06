@@ -1,0 +1,51 @@
+{% extends 'main/base.html' %}
+
+{% block title %}My Applications - Recruitment Platform{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>My Applications</h1>
+    
+    {% if applications %}
+        <table class="table table-hover mt-4">
+            <thead class="table-light">
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                    <th>Applied On</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                    <tr>
+                        <td><strong>{{ app.job.title }}</strong></td>
+                        <td>{{ app.job.client.company_name }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if app.status == 'APPLIED' %}bg-secondary
+                                {% elif app.status == 'SHORTLISTED' %}bg-info
+                                {% elif app.status == 'INTERVIEWED' %}bg-warning
+                                {% elif app.status == 'SELECTED' %}bg-success
+                                {% elif app.status == 'REJECTED' %}bg-danger
+                                {% endif %}">
+                                {{ app.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ app.applied_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'job_detail' app.job.id %}" class="btn btn-sm btn-outline-primary">View Job</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info mt-4">
+            <h5>No Applications Yet</h5>
+            <p><a href="{% url 'job_list' %}">Browse and apply for jobs</a></p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

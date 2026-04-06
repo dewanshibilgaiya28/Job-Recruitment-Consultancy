@@ -1,0 +1,48 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Client Feedback{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h3>Client Feedback</h3>
+            <p class="text-muted mb-0">
+                Job: <strong>{{ application.job.title }}</strong>
+                &middot; Candidate: <strong>{{ application.candidate.get_full_name|default:application.candidate.user.username }}</strong>
+            </p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'job_applications' application.job.id %}" class="btn btn-outline-secondary">Back to Applications</a>
+        </div>
+    </div>
+
+    {% if existing_feedback %}
+        <div class="alert alert-info">
+            You already submitted feedback for this candidate. You can update it below.
+        </div>
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="mb-3">
+                    {{ form.feedback.label_tag }}
+                    {{ form.feedback }}
+                    {% if form.feedback.help_text %}
+                        <small class="text-muted">{{ form.feedback.help_text }}</small>
+                    {% endif %}
+                    {{ form.feedback.errors }}
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Feedback</button>
+                    <a href="{% url 'job_applications' application.job.id %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

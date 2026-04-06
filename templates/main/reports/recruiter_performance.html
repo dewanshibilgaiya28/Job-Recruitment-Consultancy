@@ -1,0 +1,218 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Recruiter Performance Report{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Recruiter Performance Report</h2>
+            <p class="text-muted">{{ report_period }} Performance Overview</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-outline-secondary" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+            <a href="{% url 'export_recruiter_performance_pdf' %}" class="btn btn-outline-primary">
+                <i class="fas fa-download"></i> Export PDF
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Applications Handled</h6>
+                    <h3 class="mb-2">{{ applications_handled }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> {{ applications_change }}% vs last period</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Shortlist Rate</h6>
+                    <h3 class="mb-2">{{ shortlist_rate }}%</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> +{{ shortlist_improvement }}% improvement</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Interviews Scheduled</h6>
+                    <h3 class="mb-2">{{ interviews_scheduled }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> {{ interview_rate }}% interview rate</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Placements</h6>
+                    <h3 class="mb-2">{{ placements }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> {{ placement_rate }}% placement rate</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Performance Metrics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small><strong>Quality of Candidates</strong></small>
+                            <small>{{ quality_score }}/10</small>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ quality_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small><strong>Communication Effectiveness</strong></small>
+                            <small>{{ communication_score }}/10</small>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ communication_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small><strong>Deadline Adherence</strong></small>
+                            <small>{{ deadline_score }}/10</small>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ deadline_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small><strong>Overall Rating</strong></small>
+                            <small>{{ overall_rating }}/10</small>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ overall_percentage }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Key Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td><strong>Average Review Time</strong></td>
+                                <td><h6 class="mb-0">{{ avg_review_time }} hours</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Candidates Screened</strong></td>
+                                <td><h6 class="mb-0">{{ candidates_screened }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Candidate Feedback Score</strong></td>
+                                <td><h6 class="mb-0">{{ feedback_score }}/5 ⭐</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jobs Filled</strong></td>
+                                <td><h6 class="mb-0">{{ jobs_filled }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Active Job Assignments</strong></td>
+                                <td><h6 class="mb-0">{{ active_assignments }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Success Rate</strong></td>
+                                <td><h6 class="mb-0">{{ success_rate }}%</h6></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Monthly Performance Trend</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Month</th>
+                        <th>Applications</th>
+                        <th>Shortlisted</th>
+                        <th>Interviews</th>
+                        <th>Offers</th>
+                        <th>Placements</th>
+                        <th>Success Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>January</strong></td>
+                        <td>25</td>
+                        <td>8</td>
+                        <td>6</td>
+                        <td>3</td>
+                        <td>2</td>
+                        <td>8%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>February</strong></td>
+                        <td>32</td>
+                        <td>11</td>
+                        <td>8</td>
+                        <td>4</td>
+                        <td>3</td>
+                        <td>9.4%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>March</strong></td>
+                        <td>28</td>
+                        <td>9</td>
+                        <td>7</td>
+                        <td>3</td>
+                        <td>2</td>
+                        <td>7.1%</td>
+                    </tr>
+                    <tr class="table-active">
+                        <td><strong>Current (April)</strong></td>
+                        <td>35</td>
+                        <td>12</td>
+                        <td>9</td>
+                        <td>5</td>
+                        <td>4</td>
+                        <td>11.4%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-4" role="alert">
+        <h6 class="alert-heading">Performance Insights</h6>
+        <ul class="mb-0">
+            <li>Quality of candidates has improved by 15% compared to previous period</li>
+            <li>Communication score is within target range at {{ communication_score }}/10</li>
+            <li>Recommended focus: Reduce review time to improve overall efficiency</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

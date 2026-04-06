@@ -1,0 +1,115 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'main/css/recruiter_applications.css' %}">
+<div class="applications-wrapper">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="applications-title">Recruiter – Candidate Applications</h1>
+        <form method="get" class="d-flex" style="max-width:360px;">
+            <input name="q" type="search" class="form-control form-control-sm me-2" placeholder="Search by candidate, job or client..." value="{{ q|default_if_none:'' }}">
+            <button class="btn btn-sm btn-light" type="submit">Search</button>
+        </form>
+    </div>
+
+    <table class="applications-table">
+        <thead>
+            <tr>
+                <th>Candidate</th>
+                <th>Job Title</th>
+                <th>Client</th>
+                <th>Status</th>
+                <th>Resume</th>
+                <th>Interview</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.candidate.user.username }}</td>
+                <td>{{ app.job.title }}</td>
+                <td>{{ app.job.client.company_name }}</td>
+                <td>
+                    <span class="badge 
+                        {% if app.status == 'APPLIED' %}bg-secondary
+                        {% elif app.status == 'SHORTLISTED' %}bg-info
+                        {% elif app.status == 'INTERVIEWED' %}bg-primary
+                        {% elif app.status == 'SELECTED' %}bg-success
+                        {% elif app.status == 'REJECTED' %}bg-danger
+                        {% endif %}">
+                        {{ app.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    {% if app.resume %}
+                        <a href="{% url 'view_application_resume' app.id %}" target="_blank" rel="noopener">View Resume</a>
+                    {% else %}
+                        <span style="color:#999;">No resume</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if app.interview %}
+                        {% if app.interview.interview_date %}
+                            <!-- Interview scheduled -->
+                            <span>{{ app.interview.interview_date|date:"d M Y, h:i A" }}</span>
+
+                            <form method="post"
+                                  action="{% url 'remove_interview_datetime' app.interview.id %}"
+                                  style="display:inline;"
+                                  onsubmit="return confirm('Remove interview date & time?');">
+                                {% csrf_token %}
+                                <button type="submit">⏱ Remove Date/Time</button>
+                            </form>
+                        {% else %}
+                            <!-- Interview exists but no date -->
+                            <span style="color:#999;">Not Scheduled</span>
+                        {% endif %}
+                    {% else %}
+                        <!-- No interview object -->
+                        <span style="color:#999;">No Interview</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if app.interview and app.interview.interview_date %}
+                        <a href="{% url 'schedule_interview' app.id %}">Reschedule Interview</a>
+                    {% else %}
+                        <a href="{% url 'schedule_interview' app.id %}">Schedule Interview</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="no-applications">No applications available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation" class="mt-3">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}">Previous</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for num in paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if q %}&q={{ q|urlencode }}{% endif %}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}">Next</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}

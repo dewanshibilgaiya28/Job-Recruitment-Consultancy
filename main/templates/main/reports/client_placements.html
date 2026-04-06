@@ -1,0 +1,50 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'main/css/reports/client_placements.css' %}">
+
+<div class="placements-wrapper">
+    <h2 class="placements-title">Client Placements</h2>
+
+    <div class="placements-card">
+        <p>
+            Summary of successful placements per client.
+        </p>
+
+        {% if data %}
+        <table class="placements-table">
+            <thead>
+                <tr>
+                    <th>Client Company</th>
+                    <th>Total Placements</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in data %}
+                <tr>
+                    <td>{{ client.company_name }}</td>
+                    <td>{{ client.placements }}</td>
+                    <td>
+                        {% if client.placements > 0 %}
+                            <span class="badge">Active</span>
+                        {% else %}
+                            <span class="badge" style="background:rgba(255,193,7,0.2);color:#ffc107;">
+                                No Hires
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            🚫 No placement data found.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

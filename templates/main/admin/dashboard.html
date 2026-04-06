@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Admin Panel Redirect{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="text-center">
+    <h3>Admin panel moved</h3>
+    <p class="lead">This site uses Django's built-in admin. Click below to open the admin panel.</p>
+    <a class="btn btn-primary" href="{% url 'admin:index' %}">Open Django Admin</a>
+  </div>
+</div>
+{% endblock %}

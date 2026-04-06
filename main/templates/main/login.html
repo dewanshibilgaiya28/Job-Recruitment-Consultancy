@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- Google Fonts for Luxury Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'main/css/login.css' %}">
+</head>
+
+<body>
+
+<div class="login-box">
+    <h2>Login</h2>
+
+    {% if messages %}
+        <div class="form-errors">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <input name="username" placeholder="Username" value="{{ username|default:'' }}" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <hr>
+    <p>
+        <a href="/candidate/register/">Register as Candidate</a><br>
+        <a href="/client/register/">Register as Client</a>
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Application Details - {{ application.candidate.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Application Details</h2>
+            <p class="text-muted">{{ application.job.title }} - {{ application.job.client.company_name }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Candidate Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Name:</strong>
+                            <p>{{ application.candidate.get_full_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Email:</strong>
+                            <p>{{ application.candidate.user.email }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Phone:</strong>
+                            <p>{{ application.candidate.phone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Experience:</strong>
+                            <p>{{ application.candidate.experience }} years</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>Skills:</strong>
+                            <p>{{ application.candidate.skills }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Application Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Job Title:</strong>
+                            <p>{{ application.job.title }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Applied Date:</strong>
+                            <p>{{ application.applied_at|date:"M d, Y H:i" }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Status:</strong>
+                            <p>
+                                <span class="badge 
+                                    {% if application.status == 'APPLIED' %}bg-secondary
+                                    {% elif application.status == 'SHORTLISTED' %}bg-info
+                                    {% elif application.status == 'INTERVIEWED' %}bg-primary
+                                    {% elif application.status == 'SELECTED' %}bg-success
+                                    {% elif application.status == 'REJECTED' %}bg-danger
+                                    {% endif %}">
+                                    {{ application.get_status_display }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Location:</strong>
+                            <p>{{ application.job.location }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if application.resume %}
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Resume</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">
+                        <i class="fas fa-file-pdf"></i>
+                        <a href="{% url 'view_application_resume' application.id %}" target="_blank">
+                            View Resume
+                        </a>
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'schedule_interview' application.id %}" class="btn btn-primary">
+                            <i class="fas fa-calendar"></i> Schedule Interview
+                        </a>
+                        {% if user.is_staff %}
+                            <a href="{% url 'update_status' application.id 'SHORTLISTED' %}" class="btn btn-outline-success">
+                                <i class="fas fa-check"></i> Shortlist
+                            </a>
+                            <a href="{% url 'update_status' application.id 'REJECTED' %}" class="btn btn-outline-danger">
+                                <i class="fas fa-times"></i> Reject
+                            </a>
+                        {% elif user.stakeholder %}
+                            {% if user.stakeholder.role == "OWNER" or user.stakeholder.role == "DEV_QA" %}
+                                <a href="{% url 'update_status' application.id 'SHORTLISTED' %}" class="btn btn-outline-success">
+                                    <i class="fas fa-check"></i> Shortlist
+                                </a>
+                                <a href="{% url 'update_status' application.id 'REJECTED' %}" class="btn btn-outline-danger">
+                                    <i class="fas fa-times"></i> Reject
+                                </a>
+                            {% endif %}
+                        {% elif user.stakeholder and user.stakeholder.role == "RECRUITER" %}
+                            <a href="{% url 'update_status' application.id 'APPLIED' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-undo"></i> Reset to Applied
+                            </a>
+                        {% elif user.client and application.job.client_id == user.client.id %}
+                            <a href="{% url 'update_status' application.id 'SHORTLISTED' %}" class="btn btn-outline-success">
+                                <i class="fas fa-check"></i> Shortlist
+                            </a>
+                            <a href="{% url 'update_status' application.id 'REJECTED' %}" class="btn btn-outline-danger">
+                                <i class="fas fa-times"></i> Reject
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Job Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Company:</strong> {{ application.job.client.company_name }}</p>
+                    <p><strong>Type:</strong> {{ application.job.job_type }}</p>
+                    <p><strong>Salary:</strong> {{ application.job.salary|default:"Not Specified" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Post a New Job{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Create a New Job Posting</h4>
+                </div>
+                <div class="card-body">
+                    {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ error }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <h5 class="mb-3 text-primary">Basic Information</h5>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="title" class="form-label">Job Title</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="job_type" class="form-label">Job Type</label>
+                                <select class="form-select" id="job_type" name="job_type" required>
+                                    <option value="">Select Type</option>
+                                    <option value="full-time">Full Time</option>
+                                    <option value="part-time">Part Time</option>
+                                    <option value="contract">Contract</option>
+                                    <option value="temporary">Temporary</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="category" class="form-label">Job Category</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="tech">Technology</option>
+                                    <option value="sales">Sales</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="hr">HR</option>
+                                    <option value="finance">Finance</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3 text-primary mt-4">Compensation</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="salary_min" class="form-label">Minimum Salary</label>
+                                <input type="number" class="form-control" id="salary_min" name="salary_min" min="0">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="salary_max" class="form-label">Maximum Salary</label>
+                                <input type="number" class="form-control" id="salary_max" name="salary_max" min="0">
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3 text-primary mt-4">Job Details</h5>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Job Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="requirements" class="form-label">Requirements</label>
+                            <textarea class="form-control" id="requirements" name="requirements" rows="5" placeholder="List key requirements (one per line)" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="benefits" class="form-label">Benefits</label>
+                            <textarea class="form-control" id="benefits" name="benefits" rows="4" placeholder="List benefits offered (one per line)"></textarea>
+                        </div>
+
+                        <h5 class="mb-3 text-primary mt-4">Settings</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="deadline" class="form-label">Application Deadline</label>
+                                <input type="date" class="form-control" id="deadline" name="deadline" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="positions" class="form-label">Number of Positions</label>
+                                <input type="number" class="form-control" id="positions" name="positions" min="1" value="1" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked>
+                            <label class="form-check-label" for="is_active">
+                                Publish this job immediately
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'client_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Post Job</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

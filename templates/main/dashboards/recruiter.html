@@ -1,0 +1,257 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Recruiter Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center mb-2">
+                {% if user.stakeholder and user.stakeholder.profile_picture %}
+                    <img src="{{ user.stakeholder.profile_picture.url }}" class="rounded-circle me-3" style="height:48px;width:48px;object-fit:cover;" alt="{{ user.username }}">
+                {% elif user.client and user.client.profile_picture %}
+                    <img src="{{ user.client.profile_picture.url }}" class="rounded-circle me-3" style="height:48px;width:48px;object-fit:cover;" alt="{{ user.username }}">
+                {% elif user.candidate and user.candidate.profile_picture %}
+                    <img src="{{ user.candidate.profile_picture.url }}" class="rounded-circle me-3" style="height:48px;width:48px;object-fit:cover;" alt="{{ user.username }}">
+                {% else %}
+                    <i class="fas fa-user-circle fa-2x me-3"></i>
+                {% endif %}
+                <div>
+                    <h2 class="mb-0">Recruiter Dashboard</h2>
+                    <p class="text-muted mb-0">Welcome back, {{ user.first_name }}! Manage your job applications and candidates.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'candidate_register' %}" class="btn btn-outline-success">
+                <i class="fas fa-user-plus"></i> Add Candidate
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <form method="get" class="d-flex flex-wrap gap-2">
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ q|default:'' }}"
+                    class="form-control"
+                    placeholder="Search candidate, job title, or company..."
+                >
+                <select name="status" class="form-select" style="max-width: 220px;">
+                    <option value="ALL" {% if status_filter == "ALL" %}selected{% endif %}>All Statuses</option>
+                    {% for code, label in application_status_choices %}
+                        <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <select name="mode" class="form-select" style="max-width: 220px;">
+                    <option value="" {% if not mode_filter %}selected{% endif %}>All Interview Modes</option>
+                    {% for mode in interview_mode_options %}
+                        <option value="{{ mode }}" {% if mode_filter == mode %}selected{% endif %}>{{ mode }}</option>
+                    {% endfor %}
+                </select>
+                <select name="time_filter" class="form-select" style="max-width: 220px;">
+                    {% for value, label in time_filter_options %}
+                        <option value="{{ value }}" {% if time_filter == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">Search</button>
+                {% if q or status_filter != "APPLIED" or mode_filter or time_filter != "all" %}
+                    <a href="{% url 'recruiter_dashboard' %}" class="btn btn-outline-secondary">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">My Applications</h6>
+                            <h3 class="mb-0">{{ total_applications }}</h3>
+                        </div>
+                        <div class="text-primary" style="font-size: 2.5rem;">
+                            <i class="fas fa-inbox"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Shortlisted</h6>
+                            <h3 class="mb-0">{{ shortlisted_count }}</h3>
+                        </div>
+                        <div class="text-success" style="font-size: 2.5rem;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Interviews Scheduled</h6>
+                            <h3 class="mb-0">{{ interviews_count }}</h3>
+                        </div>
+                        <div class="text-info" style="font-size: 2.5rem;">
+                            <i class="fas fa-video"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Placements</h6>
+                            <h3 class="mb-0">{{ placements_count }}</h3>
+                        </div>
+                        <div class="text-warning" style="font-size: 2.5rem;">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Filtered Applications</h5>
+                    <a href="{% url 'recruiter_applications' %}" class="btn btn-sm btn-light">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Job Title</th>
+                                <th>Applied Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for application in pending_applications %}
+                            <tr>
+                                <td><strong>{{ application.candidate.get_full_name }}</strong></td>
+                                <td>{{ application.job.title }}</td>
+                                <td>{{ application.applied_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'job_applications' application.job.id %}" class="btn btn-sm btn-primary">Review</a>
+                                    <a href="{% url 'schedule_interview' application.id %}" class="btn btn-sm btn-success">Schedule</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">No pending applications</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if pending_page_obj and pending_page_obj.has_other_pages %}
+                <div class="card-footer bg-white">
+                    <nav aria-label="Filtered applications pagination">
+                        <ul class="pagination pagination-sm mb-0 justify-content-end">
+                            <li class="page-item {% if not pending_page_obj.has_previous %}disabled{% endif %}">
+                                <a class="page-link" href="?q={{ q|urlencode }}&status={{ status_filter|urlencode }}&mode={{ mode_filter|urlencode }}&time_filter={{ time_filter|urlencode }}&pending_page={% if pending_page_obj.has_previous %}{{ pending_page_obj.previous_page_number }}{% else %}1{% endif %}&interview_page={{ interview_page_obj.number }}">Previous</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Page {{ pending_page_obj.number }} of {{ pending_page_obj.paginator.num_pages }}</span>
+                            </li>
+                            <li class="page-item {% if not pending_page_obj.has_next %}disabled{% endif %}">
+                                <a class="page-link" href="?q={{ q|urlencode }}&status={{ status_filter|urlencode }}&mode={{ mode_filter|urlencode }}&time_filter={{ time_filter|urlencode }}&pending_page={% if pending_page_obj.has_next %}{{ pending_page_obj.next_page_number }}{% else %}{{ pending_page_obj.paginator.num_pages }}{% endif %}&interview_page={{ interview_page_obj.number }}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'recruiter_applications' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-list text-primary"></i> View All Applications
+                    </a>
+                    <a href="{% url 'recruiter_performance_report' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-chart-line text-info"></i> My Performance
+                    </a>
+                    <a href="{% url 'profile' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                        {% if user.stakeholder and user.stakeholder.profile_picture %}
+                            <img src="{{ user.stakeholder.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle me-3" style="height:40px;width:40px;object-fit:cover;">
+                        {% elif user.client and user.client.profile_picture %}
+                            <img src="{{ user.client.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle me-3" style="height:40px;width:40px;object-fit:cover;">
+                        {% elif user.candidate and user.candidate.profile_picture %}
+                            <img src="{{ user.candidate.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle me-3" style="height:40px;width:40px;object-fit:cover;">
+                        {% else %}
+                            <i class="fas fa-user text-warning me-3" style="font-size:1.25rem"></i>
+                        {% endif %}
+                        <div>
+                            <div class="fw-bold mb-0">{{ user.get_full_name|default:user.username }}</div>
+                            <small class="text-muted">Edit profile</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'profile_edit' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cogs text-secondary"></i> Edit Settings
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Upcoming Interviews</h5>
+                </div>
+                <div class="card-body">
+                    {% for interview in upcoming_interviews %}
+                    <div class="mb-3 pb-3 border-bottom">
+                        <h6 class="mb-1">{{ interview.candidate.get_full_name }}</h6>
+                        <p class="text-muted small mb-1">{{ interview.job.title }}</p>
+                        <p class="text-muted small">
+                            <i class="fas fa-calendar"></i> {{ interview.interview_date|date:"M d, Y H:i" }}
+                        </p>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No upcoming interviews scheduled</p>
+                    {% endfor %}
+                </div>
+                {% if interview_page_obj and interview_page_obj.has_other_pages %}
+                <div class="card-footer bg-white">
+                    <nav aria-label="Upcoming interviews pagination">
+                        <ul class="pagination pagination-sm mb-0 justify-content-end">
+                            <li class="page-item {% if not interview_page_obj.has_previous %}disabled{% endif %}">
+                                <a class="page-link" href="?q={{ q|urlencode }}&status={{ status_filter|urlencode }}&mode={{ mode_filter|urlencode }}&time_filter={{ time_filter|urlencode }}&pending_page={{ pending_page_obj.number }}&interview_page={% if interview_page_obj.has_previous %}{{ interview_page_obj.previous_page_number }}{% else %}1{% endif %}">Previous</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Page {{ interview_page_obj.number }} of {{ interview_page_obj.paginator.num_pages }}</span>
+                            </li>
+                            <li class="page-item {% if not interview_page_obj.has_next %}disabled{% endif %}">
+                                <a class="page-link" href="?q={{ q|urlencode }}&status={{ status_filter|urlencode }}&mode={{ mode_filter|urlencode }}&time_filter={{ time_filter|urlencode }}&pending_page={{ pending_page_obj.number }}&interview_page={% if interview_page_obj.has_next %}{{ interview_page_obj.next_page_number }}{% else %}{{ interview_page_obj.paginator.num_pages }}{% endif %}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

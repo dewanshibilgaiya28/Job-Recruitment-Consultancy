@@ -1,0 +1,40 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/job_list.css' %}">
+<div class="jobs-wrapper">
+    <h2 class="jobs-title">Available Jobs</h2>
+
+    {% for job in jobs %}
+        <div class="job-card">
+            <h3>
+                <a href="{% url 'job_detail' job.id %}">{{ job.title }}</a>
+            </h3><br>
+            {{ job.description }}<br>
+
+            <!-- ONLY CANDIDATE CAN APPLY -->
+            {% if user.is_authenticated and user.candidate %}
+                <a href="{% url 'apply_job' job.id %}">Apply</a>
+            {% endif %}
+
+            <!-- CLIENT VIEW (OWN JOB) -->
+            {% if user.is_authenticated and user.client %}
+                {% if job.client == user.client %}
+                    <small><i>Your Job</i></small>
+                    <a href="{% url 'job_applications' job.id %}">View Applications</a>
+                {% endif %}
+            {% endif %}
+
+            <!-- RECRUITER / OWNER / DEV_QA -->
+            {% if user.is_authenticated and user.stakeholder %}
+                <small>Status: Active</small>
+            {% endif %}
+
+            <hr>
+        </div>
+    {% empty %}
+        <p class="no-jobs">No jobs available</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

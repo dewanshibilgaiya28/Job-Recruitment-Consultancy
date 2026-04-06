@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/job_post.css' %}">
+<div class="postjob-wrapper">
+    <h2 class="postjob-title">Post Job</h2>
+
+    <form method="post" class="postjob-form">
+        {% csrf_token %}
+        
+        <!-- Job Title -->
+        <input name="title" placeholder="Job Title" type="text" required>
+        
+        <!-- Job Description -->
+        <textarea name="description" placeholder="Job Description" required></textarea>
+        
+        <!-- Location -->
+        <input name="location" placeholder="Location" type="text" required>
+        
+        <!-- Job Type -->
+        <select name="job_type" required>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Internship">Internship</option>
+        </select>
+        
+        <!-- Salary -->
+        <input name="salary" placeholder="Salary (e.g., ₹50,000-70,000)" type="text" required>
+
+        <!-- Submit Button -->
+        <button type="submit">Post Job</button>
+    </form>
+</div>
+
+{% endblock %}

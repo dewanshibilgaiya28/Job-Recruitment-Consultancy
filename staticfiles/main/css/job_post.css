@@ -1,0 +1,94 @@
+/* ===== POST JOB PAGE ===== */
+
+.postjob-wrapper {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Luxury Heading */
+.postjob-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: #d4af37;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}
+
+.postjob-title::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, #d4af37, transparent);
+}
+
+/* Form Card */
+.postjob-form {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    backdrop-filter: blur(12px);
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* Input and Textarea */
+.postjob-form input,
+.postjob-form textarea,
+.postjob-form select {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.postjob-form input:focus,
+.postjob-form textarea:focus,
+.postjob-form select:focus {
+    border: 1px solid #d4af37;
+    outline: none;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+.postjob-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Button */
+.postjob-form button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #d4af37, #f9d36b);
+    color: #222;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.postjob-form button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .postjob-form {
+        padding: 30px 20px;
+    }
+}

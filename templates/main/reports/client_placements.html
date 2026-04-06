@@ -1,0 +1,278 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Client Placements Report{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Placement Report</h2>
+            <p class="text-muted">{{ reporting_period }} Recruitment and Placement Analytics</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-outline-secondary" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+            <a href="{% url 'export_client_placements_pdf' %}" class="btn btn-outline-primary">
+                <i class="fas fa-download"></i> Export PDF
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-left-primary">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Positions Filled</h6>
+                    <h3 class="mb-2">{{ total_positions_filled }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> {{ positions_growth }}% growth</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-left-success">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Applicants Received</h6>
+                    <h3 class="mb-2">{{ total_applicants }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> {{ applicants_growth }}% increase</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-left-info">
+                <div class="card-body">
+                    <h6 class="text-muted">Avg. Time to Hire</h6>
+                    <h3 class="mb-2">{{ avg_time_to_hire }} days</h3>
+                    <small class="text-success"><i class="fas fa-arrow-down"></i> {{ time_reduction }}% faster</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-left-warning">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Recruitment Cost</h6>
+                    <h3 class="mb-2">${{ total_cost }}</h3>
+                    <small class="text-danger"><i class="fas fa-arrow-up"></i> {{ cost_increase }}% vs budget</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Placement by Job Title</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Positions</th>
+                                <th>Filled</th>
+                                <th>Success Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Senior Developer</strong></td>
+                                <td>5</td>
+                                <td>4</td>
+                                <td><span class="badge bg-success">80%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Marketing Manager</strong></td>
+                                <td>3</td>
+                                <td>3</td>
+                                <td><span class="badge bg-success">100%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sales Executive</strong></td>
+                                <td>6</td>
+                                <td>5</td>
+                                <td><span class="badge bg-warning">83%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>HR Specialist</strong></td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td><span class="badge bg-success">100%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Financial Analyst</strong></td>
+                                <td>4</td>
+                                <td>2</td>
+                                <td><span class="badge bg-danger">50%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Hiring Pipeline Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>Applications Received</label>
+                            <span class="badge bg-primary">{{ applications_received }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>Candidates Interviewed ({{ interview_percentage }}%)</label>
+                            <span class="badge bg-info">{{ candidates_interviewed }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ interview_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>Offers Extended ({{ offer_percentage }}%)</label>
+                            <span class="badge bg-success">{{ offers_extended }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ offer_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>Offers Accepted ({{ acceptance_percentage }}%)</label>
+                            <span class="badge bg-success">{{ offers_accepted }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ acceptance_percentage }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Placement Retention</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td><strong>30-Day Retention Rate</strong></td>
+                                <td><h6 class="mb-0">{{ retention_30_days }}%</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>90-Day Retention Rate</strong></td>
+                                <td><h6 class="mb-0">{{ retention_90_days }}%</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>6-Month Retention Rate</strong></td>
+                                <td><h6 class="mb-0">{{ retention_6_months }}%</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>12-Month Retention Rate</strong></td>
+                                <td><h6 class="mb-0">{{ retention_12_months }}%</h6></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Cost Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td><strong>Avg. Cost Per Hire</strong></td>
+                                <td><h6 class="mb-0">${{ avg_cost_per_hire }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Recruitment Cost</strong></td>
+                                <td><h6 class="mb-0">${{ total_recruitment_cost }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cost Per Interview</strong></td>
+                                <td><h6 class="mb-0">${{ cost_per_interview }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Recruiting Cost as % of Revenue</strong></td>
+                                <td><h6 class="mb-0">{{ cost_revenue_percentage }}%</h6></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Recent Placements</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Job Title</th>
+                        <th>Department</th>
+                        <th>Start Date</th>
+                        <th>Status</th>
+                        <th>Retention</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>John Smith</strong></td>
+                        <td>Senior Developer</td>
+                        <td>Engineering</td>
+                        <td>2024-03-15</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>32 days</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sarah Johnson</strong></td>
+                        <td>Marketing Manager</td>
+                        <td>Marketing</td>
+                        <td>2024-02-28</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>47 days</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Michael Brown</strong></td>
+                        <td>Sales Executive</td>
+                        <td>Sales</td>
+                        <td>2024-01-20</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>117 days</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.border-left-primary { border-left: 4px solid #0d6efd; }
+.border-left-success { border-left: 4px solid #198754; }
+.border-left-info { border-left: 4px solid #0dcaf0; }
+.border-left-warning { border-left: 4px solid #ffc107; }
+</style>
+{% endblock %}

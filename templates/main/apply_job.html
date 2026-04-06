@@ -1,0 +1,81 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Apply for Job{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{{ job.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Company:</strong> {{ job.company }}</p>
+                            <p><strong>Location:</strong> {{ job.location }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Job Type:</strong> <span class="badge bg-info">{{ job.job_type }}</span></p>
+                            <p><strong>Salary Range:</strong> {{ job.salary_min }} - {{ job.salary_max }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <h5>Job Description</h5>
+                    <p>{{ job.description }}</p>
+                    <hr>
+                    <h5>Requirements</h5>
+                    <ul>
+                        <li>{{ job.requirement1 }}</li>
+                        <li>{{ job.requirement2 }}</li>
+                        <li>{{ job.requirement3 }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Apply Now</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="cover_letter" class="form-label">Cover Letter</label>
+                            <textarea class="form-control" id="cover_letter" name="cover_letter" rows="6" required placeholder="Tell us why you're a great fit for this role..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="resume" class="form-label">Upload Resume (PDF only)</label>
+                            <input type="file" class="form-control" id="resume" name="resume" accept=".pdf" required>
+                            <small class="text-muted">Maximum file size: 5MB</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="additional_files" class="form-label">Additional Files (Optional)</label>
+                            <input type="file" class="form-control" id="additional_files" name="additional_files" multiple>
+                            <small class="text-muted">Portfolio, certificates, etc.</small>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agree_terms" name="agree_terms" required>
+                            <label class="form-check-label" for="agree_terms">
+                                I understand that this application will be reviewed by the hiring team
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Submit Application</button>
+                            <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-secondary">Back to Job</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

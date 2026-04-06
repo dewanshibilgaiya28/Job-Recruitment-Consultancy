@@ -1,0 +1,33 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Elite Recruitment Portal</title>
+
+    <!-- Premium Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'main/css/reports/active_jobs.css' %}">
+    
+</head>
+
+<body>
+
+<h1>Available Job Openings</h1>
+
+<ul id="jobList">
+    <!-- Real-time jobs will load here -->
+</ul>
+
+<p id="emptyMsg" class="empty" style="display:none;">
+    No jobs available at the moment.
+</p>
+
+<script src="{% static 'js/reports/active_jobs.js' %}"></script>
+
+
+</body>
+</html>
+{% endblock %}

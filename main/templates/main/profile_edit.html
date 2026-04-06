@@ -1,0 +1,47 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/job_post.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/apply_job.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/profile.css' %}">
+<div class="postjob-wrapper profile-edit-wrapper">
+    <h2 class="postjob-title">Edit Profile</h2>
+
+    <form method="post" enctype="multipart/form-data" class="postjob-form profile-edit-form">
+        {% csrf_token %}
+        <div class="profile-section">
+            <h3>Account</h3>
+            <label>First name</label>
+            <input type="text" name="first_name" value="{{ profile_user.first_name }}" placeholder="First name">
+            <label>Last name</label>
+            <input type="text" name="last_name" value="{{ profile_user.last_name }}" placeholder="Last name">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ profile_user.email }}" placeholder="Email">
+        </div>
+
+        {% if form %}
+        <!-- Candidate -->
+        <div class="profile-section">
+            <h3>Candidate Details</h3>
+            {{ form.as_p }}
+        </div>
+        {% elif client %}
+        <!-- Client -->
+        <div class="profile-section">
+            <h3>Company Details</h3>
+            <label>Company name</label>
+            <input type="text" name="company_name" value="{{ client.company_name }}" required>
+            <label>Contact number</label>
+            <input type="text" name="contact_number" value="{{ client.contact_number }}" required>
+        </div>
+        {% elif stakeholder %}
+        <!-- Recruiter / Stakeholder: only account fields above -->
+        {% endif %}
+
+        <div class="form-actions">
+            <button type="submit">Save Changes</button>
+            <a href="{% url 'profile' %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

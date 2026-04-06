@@ -1,0 +1,25 @@
+/* Apply Job form */
+.apply-job-wrapper .apply-job-company { margin: 10px 0; color: #ddd; }
+.apply-job-notice {
+    margin: 15px 0;
+    padding: 12px;
+    background: rgba(212, 175, 55, 0.15);
+    border-left: 4px solid #d4af37;
+    color: #e8e0c8;
+    border-radius: 4px;
+}
+.apply-job-form { margin-top: 25px; }
+.apply-job-form .form-group { margin-bottom: 20px; }
+.apply-job-form label { display: block; margin-bottom: 8px; color: #d4af37; }
+.apply-job-form input[type="file"] {
+    padding: 8px;
+    color: #ddd;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 6px;
+}
+.apply-job-form .help-text { display: block; font-size: 13px; color: #999; margin-top: 4px; }
+.apply-job-form .field-errors, .apply-job-form .form-errors { color: #f88; margin: 8px 0; }
+.apply-job-form .form-actions { margin-top: 20px; display: flex; align-items: center; gap: 15px; }
+.apply-job-form .cancel-link { color: #999; text-decoration: none; }
+.apply-job-form .cancel-link:hover { color: #d4af37; }

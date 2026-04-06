@@ -1,0 +1,67 @@
+/* ===== CLIENT PLACEMENTS PAGE ===== */
+
+.placements-wrapper {
+    margin-top: 40px;
+}
+
+/* Heading */
+.placements-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    color: #d4af37;
+    margin-bottom: 25px;
+}
+
+/* Card */
+.placements-card {
+    padding: 40px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 18px;
+    border: 1px solid rgba(212,175,55,0.25);
+    color: #ddd;
+}
+
+/* Table */
+.placements-table {
+    width: 100%;
+    margin-top: 25px;
+    border-collapse: collapse;
+}
+
+.placements-table th,
+.placements-table td {
+    padding: 14px 16px;
+    text-align: left;
+}
+
+.placements-table th {
+    color: #d4af37;
+    border-bottom: 1px solid rgba(212,175,55,0.3);
+}
+
+.placements-table td {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.placements-table tr:hover {
+    background: rgba(212,175,55,0.06);
+}
+
+/* Badge */
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    background: rgba(40,167,69,0.2);
+    color: #28a745;
+}
+
+/* Empty */
+.empty-state {
+    margin-top: 30px;
+    padding: 25px;
+    background: rgba(255,0,0,0.08);
+    color: #ffb3b3;
+    border-left: 4px solid red;
+}

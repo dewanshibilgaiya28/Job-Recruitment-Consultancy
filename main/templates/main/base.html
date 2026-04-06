@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QuessCorp Recruitment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+</head>
+<body>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="top-contact-bar">
+    <div class="container-fluid site-container top-contact-inner">
+        <div class="contact-item">
+            <i class="fas fa-phone-alt"></i>
+            <span>+1 (415) 555-0183</span>
+        </div>
+        <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>hello@quesscorp.com</span>
+        </div>
+    </div>
+</div>
+
+<nav>
+
+    <a href="{% url 'job_list' %}" class="brand-mark">
+        <img src="{% static 'main/img/brand-logo.svg' %}" alt="QuessCorp" class="brand-logo">
+        <span class="brand-name">GuessSharp</span>
+    </a>
+
+    {% if user.is_authenticated %}
+        <!-- Common dashboard -->
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}" class="profile-link d-flex align-items-center">
+            {% if user.candidate and not user.client and not user.stakeholder and user.candidate.profile_picture %}
+                <img src="{{ user.candidate.profile_picture.url }}" alt="{{ user.username }}" class="nav-avatar rounded-circle">
+            {% else %}
+                <i class="fas fa-user-circle nav-avatar-icon"></i>
+            {% endif %}
+            <span>{{ user.get_full_name|default:user.username }}</span>
+        </a>
+
+        <!-- ================= CANDIDATE ================= -->
+        {% if user.candidate %}
+            <a href="{% url 'job_list' %}">Jobs</a>
+            <a href="{% url 'my_applications' %}">My Applications</a>
+        {% endif %}
+
+        <!-- ================= CLIENT ================= -->
+        {% if user.client %}
+            <a href="{% url 'job_post' %}">Post Job</a>
+            <a href="{% url 'job_list' %}">My Jobs</a>
+            <a href="/reports/client-placements/">Placements</a>
+        {% endif %}
+
+        <!-- ================= RECRUITER / OWNER / DEV_QA ================= -->
+          {% if user.stakeholder %}
+            {% if user.stakeholder.role == "RECRUITER" or user.stakeholder.role == "OWNER" or user.stakeholder.role == "DEV_QA" %}
+                <a href="{% url 'job_list' %}">All Jobs</a>
+                <a href="/reports/active-jobs/">Active Jobs</a>
+                <a href="/reports/pipeline/">Pipeline</a>
+                <a href="/reports/recruiter-performance/">Performance</a>
+            {% endif %}
+          {% endif %}
+
+        <a href="{% url 'logout' %}">Logout</a>
+
+    {% else %}
+        <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+
+
+</nav>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

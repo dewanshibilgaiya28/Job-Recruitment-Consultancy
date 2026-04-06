@@ -1,0 +1,137 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Applications{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Job Applications</h2>
+            <p class="text-muted">Manage all applications from your assigned jobs</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'recruiter_dashboard' %}" class="btn btn-outline-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <div class="card text-center border-primary">
+                <div class="card-body">
+                    <h6 class="card-title">Total Applications</h6>
+                    <h3 class="mb-0 text-primary">{{ total_applications }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-warning">
+                <div class="card-body">
+                    <h6 class="card-title">Pending Review</h6>
+                    <h3 class="mb-0 text-warning">{{ pending_applications }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-info">
+                <div class="card-body">
+                    <h6 class="card-title">Shortlisted</h6>
+                    <h3 class="mb-0 text-info">{{ shortlisted_applications }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-success">
+                <div class="card-body">
+                    <h6 class="card-title">Interviews</h6>
+                    <h3 class="mb-0 text-success">{{ scheduled_interviews }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0">Applications List</h5>
+                </div>
+                <div class="col-md-6">
+                    <form method="get" class="d-flex">
+                        <input name="q" type="search" class="form-control form-control-sm me-2" placeholder="Search by candidate name, job..." value="{{ q|default_if_none:'' }}">
+                        <button class="btn btn-sm btn-light" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Candidate</th>
+                        <th>Email</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td><strong>{{ application.job.title }}</strong></td>
+                        <td>{{ application.candidate.get_full_name }}</td>
+                        <td>{{ application.candidate.user.email }}</td>
+                        <td>{{ application.applied_at|date:"M d, Y" }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if application.status == 'APPLIED' %}bg-secondary
+                                {% elif application.status == 'SHORTLISTED' %}bg-info
+                                {% elif application.status == 'INTERVIEWED' %}bg-primary
+                                {% elif application.status == 'SELECTED' %}bg-success
+                                {% elif application.status == 'REJECTED' %}bg-danger
+                                {% endif %}">
+                                {{ application.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'application_detail' application.id %}" class="btn btn-sm btn-primary">View</a>
+                            <a href="{% url 'schedule_interview' application.id %}" class="btn btn-sm btn-success">Schedule</a>
+                            <a href="{% url 'update_status' application.id 'APPLIED' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">No applications assigned yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}">Previous</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for num in paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if q %}&q={{ q|urlencode }}{% endif %}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}">Next</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

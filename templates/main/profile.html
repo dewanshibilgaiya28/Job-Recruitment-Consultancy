@@ -1,0 +1,158 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Profile Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            {# Use primary role from context (profile_view) so a user with multiple role objects shows the correct section #}
+                            {% if role == "CLIENT" and client and client.profile_picture %}
+                                <img src="{{ client.profile_picture.url }}" class="img-fluid rounded-circle border" alt="Profile Picture">
+                            {% elif role == "CANDIDATE" and candidate and candidate.profile_picture %}
+                                <img src="{{ candidate.profile_picture.url }}" class="img-fluid rounded-circle border" alt="Profile Picture">
+                            {% elif stakeholder and stakeholder.profile_picture %}
+                                <img src="{{ stakeholder.profile_picture.url }}" class="img-fluid rounded-circle border" alt="Profile Picture">
+                            {% else %}
+                                <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle border" alt="Profile Picture">
+                            {% endif %}
+
+                            {# Show company name for clients; otherwise show user name/email #}
+                            {% if role == "CLIENT" and client %}
+                                <h5 class="mt-3">{{ client.company_name }}</h5>
+                                <p class="text-muted">{{ client.contact_number }}</p>
+                            {% else %}
+                                <h5 class="mt-3">{{ user.first_name }} {{ user.last_name }}</h5>
+                                <p class="text-muted">{{ user.email }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <th>Email:</th>
+                                        <td>{{ user.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>First Name:</th>
+                                        <td>{{ user.first_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Last Name:</th>
+                                        <td>{{ user.last_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>User Type:</th>
+                                        <td>
+                                            {% if role == "CANDIDATE" %}
+                                                <span class="badge bg-success">Candidate</span>
+                                            {% elif role == "CLIENT" %}
+                                                <span class="badge bg-warning">Employer</span>
+                                            {% elif stakeholder %}
+                                                <span class="badge bg-info">{{ stakeholder.get_role_display|default:stakeholder.role }}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">User</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Phone:</th>
+                                        <td>
+                                            {% if role == "CANDIDATE" and candidate %}
+                                                {{ candidate.phone }}
+                                            {% elif role == "CLIENT" and client %}
+                                                {{ client.contact_number }}
+                                            {% elif stakeholder and stakeholder.phone %}
+                                                {{ stakeholder.phone }}
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Location:</th>
+                                        <td>
+                                            {% if role == "CANDIDATE" and candidate %}
+                                                {{ candidate.location|default:"Not provided" }}
+                                            {% elif stakeholder and stakeholder.location %}
+                                                {{ stakeholder.location }}
+                                            {% elif stakeholder %}
+                                                Not provided
+                                            {% else %}
+                                                Not applicable
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Skills:</th>
+                                        <td>
+                                            {% if role == "CANDIDATE" and candidate %}
+                                                {{ candidate.skills|default:"Not provided" }}
+                                            {% elif stakeholder and stakeholder.skills %}
+                                                {{ stakeholder.skills }}
+                                            {% elif stakeholder %}
+                                                Not provided
+                                            {% else %}
+                                                Not applicable
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Experience:</th>
+                                        <td>
+                                            {% if role == "CANDIDATE" and candidate %}
+                                                {{ candidate.experience }} years
+                                            {% elif stakeholder %}
+                                                {% if stakeholder.experience != None %}
+                                                    {{ stakeholder.experience }} years
+                                                {% else %}
+                                                    Not provided
+                                                {% endif %}
+                                            {% else %}
+                                                Not applicable
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <p class="text-muted small">Member Since</p>
+                        <h6>{{ user.date_joined|date:"M d, Y" }}</h6>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-muted small">Last Login</p>
+                        <h6>{{ user.last_login|date:"M d, Y H:i" }}</h6>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-muted small">Account Status</p>
+                        <h6><span class="badge bg-success">Active</span></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

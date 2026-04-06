@@ -1,0 +1,75 @@
+/* ===== MY APPLICATIONS PAGE ===== */
+
+.applications-wrapper {
+    margin-top: 40px;
+}
+
+/* Luxury Heading */
+.applications-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    color: #d4af37;
+    margin-bottom: 25px;
+    position: relative;
+    display: inline-block;
+}
+
+.applications-title::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, #d4af37, transparent);
+}
+
+/* Application Cards */
+.application-card {
+    padding: 25px 30px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    backdrop-filter: blur(12px);
+    transition: all 0.4s ease;
+    color: #ddd;
+}
+
+/* Hover Effect */
+.application-card:hover {
+    transform: translateY(-6px);
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    color: #d4af37;
+}
+
+/* Job Title and Status */
+.application-job {
+    font-size: 20px;
+    font-weight: 500;
+    color: #d4af37;
+}
+
+.application-status {
+    font-size: 16px;
+    color: #ccc;
+    margin-top: 5px;
+}
+
+/* Empty message styling */
+.no-applications {
+    padding: 20px;
+    background: rgba(255, 0, 0, 0.1);
+    border-left: 4px solid red;
+    color: #ffb3b3;
+    margin-top: 20px;
+    width: fit-content;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .application-card {
+        padding: 20px;
+    }
+}

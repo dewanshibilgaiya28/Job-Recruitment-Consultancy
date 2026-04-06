@@ -1,0 +1,220 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Pipeline Analytics{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Pipeline Analytics</h2>
+            <p class="text-muted">View your recruitment pipeline overview and metrics</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="btn-group" role="group">
+                <input type="radio" class="btn-check" name="period" id="period_month" checked>
+                <label class="btn btn-outline-primary" for="period_month">This Month</label>
+                
+                <input type="radio" class="btn-check" name="period" id="period_quarter">
+                <label class="btn btn-outline-primary" for="period_quarter">This Quarter</label>
+                
+                <input type="radio" class="btn-check" name="period" id="period_year">
+                <label class="btn btn-outline-primary" for="period_year">This Year</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-left-primary">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Applications</h6>
+                    <h3 class="mb-2">{{ total_applications }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> +12.5% from last month</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-left-success">
+                <div class="card-body">
+                    <h6 class="text-muted">Shortlisted Candidates</h6>
+                    <h3 class="mb-2">{{ shortlisted_count }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> +8.2% conversion rate</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-left-info">
+                <div class="card-body">
+                    <h6 class="text-muted">Interviews Conducted</h6>
+                    <h3 class="mb-2">{{ interviews_conducted }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> +5.3% completion rate</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-left-warning">
+                <div class="card-body">
+                    <h6 class="text-muted">Offer Extended</h6>
+                    <h3 class="mb-2">{{ offers_extended }}</h3>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> +3.1% placement rate</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Pipeline Stage Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>Applications Received</label>
+                            <span class="badge bg-primary">{{ applications_received }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>Initial Screening ({{ screening_percentage }}%)</label>
+                            <span class="badge bg-info">{{ initial_screening }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ screening_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>First Interview ({{ first_interview_percentage }}%)</label>
+                            <span class="badge bg-success">{{ first_interview }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ first_interview_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>Final Interview ({{ final_interview_percentage }}%)</label>
+                            <span class="badge bg-warning">{{ final_interview }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ final_interview_percentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label>Offer Extended ({{ offer_percentage }}%)</label>
+                            <span class="badge bg-danger">{{ offers }}</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ offer_percentage }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Key Metrics</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td><strong>Average Time to Hire</strong></td>
+                                <td><h5 class="mb-0">{{ avg_time_to_hire }} days</h5></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Application to Interview Rate</strong></td>
+                                <td><h5 class="mb-0">{{ interview_rate }}%</h5></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Offer Acceptance Rate</strong></td>
+                                <td><h5 class="mb-0">{{ acceptance_rate }}%</h5></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cost Per Hire</strong></td>
+                                <td><h5 class="mb-0">${{ cost_per_hire }}</h5></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Top Source</strong></td>
+                                <td><h5 class="mb-0">{{ top_source }}</h5></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Quality of Hire Score</strong></td>
+                                <td><h5 class="mb-0">{{ quality_score }}/10</h5></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Application Source Breakdown</h5>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead class="table-light">
+                    <tr>
+                        <th>Source</th>
+                        <th>Applications</th>
+                        <th>Conversion Rate</th>
+                        <th>Quality Score</th>
+                        <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Job Boards</strong></td>
+                        <td>45</td>
+                        <td>12.5%</td>
+                        <td>7.8/10</td>
+                        <td><span class="text-success"><i class="fas fa-arrow-up"></i> +15%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Referrals</strong></td>
+                        <td>28</td>
+                        <td>28.6%</td>
+                        <td>8.9/10</td>
+                        <td><span class="text-success"><i class="fas fa-arrow-up"></i> +8%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Social Media</strong></td>
+                        <td>18</td>
+                        <td>11.1%</td>
+                        <td>7.2/10</td>
+                        <td><span class="text-success"><i class="fas fa-arrow-up"></i> +22%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Direct</strong></td>
+                        <td>12</td>
+                        <td>16.7%</td>
+                        <td>8.4/10</td>
+                        <td><span class="text-danger"><i class="fas fa-arrow-down"></i> -5%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.border-left-primary { border-left: 4px solid #0d6efd; }
+.border-left-success { border-left: 4px solid #198754; }
+.border-left-info { border-left: 4px solid #0dcaf0; }
+.border-left-warning { border-left: 4px solid #ffc107; }
+</style>
+{% endblock %}

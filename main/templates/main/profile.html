@@ -1,0 +1,50 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/job_detail.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/profile.css' %}">
+<div class="job-wrapper profile-wrapper">
+    <h1 class="job-title">My Profile</h1>
+
+    <div class="profile-section">
+        <h2>Account</h2>
+        <p><strong>Username:</strong> {{ profile_user.username }}</p>
+        <p><strong>Name:</strong> {{ profile_user.get_full_name|default:"—" }}</p>
+        <p><strong>Email:</strong> {{ profile_user.email|default:"—" }}</p>
+    </div>
+
+    {% if candidate %}
+    <div class="profile-section">
+        <h2>Candidate Details</h2>
+        <p><strong>Phone:</strong> {{ candidate.phone }}</p>
+        <p><strong>Skills:</strong> {{ candidate.skills }}</p>
+        <p><strong>Experience:</strong> {{ candidate.experience }} years</p>
+        {% if candidate.resume %}
+            <p><strong>Profile Resume:</strong> <a href="{{ candidate.resume.url }}" target="_blank" rel="noopener">View / Download</a></p>
+        {% else %}
+            <p><strong>Profile Resume:</strong> Not uploaded</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if client %}
+    <div class="profile-section">
+        <h2>Company Details</h2>
+        {% if client.profile_picture %}
+            <img src="{{ client.profile_picture.url }}" alt="Company logo" class="rounded mb-2" style="height:80px;width:80px;object-fit:cover;">
+        {% endif %}
+        <p><strong>Company Name:</strong> {{ client.company_name }}</p>
+        <p><strong>Contact Number:</strong> {{ client.contact_number }}</p>
+    </div>
+    {% endif %}
+
+    {% if stakeholder %}
+    <div class="profile-section">
+        <h2>Role</h2>
+        <p><strong>Role:</strong> {{ stakeholder.get_role_display|default:stakeholder.role }}</p>
+    </div>
+    {% endif %}
+
+    <p class="profile-actions"><a href="{% url 'profile_edit' %}" class="apply-btn">Edit Profile</a></p>
+</div>
+{% endblock %}

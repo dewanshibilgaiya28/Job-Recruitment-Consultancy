@@ -1,0 +1,99 @@
+/* ===== AVAILABLE JOBS PAGE ===== */
+
+.jobs-wrapper {
+    margin-top: 40px;
+}
+
+/* Luxury Heading */
+.jobs-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: #d4af37;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}
+
+.jobs-title::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, #d4af37, transparent);
+}
+
+/* Job Card */
+.job-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    backdrop-filter: blur(12px);
+    padding: 25px 30px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    color: #ddd;
+}
+
+/* Hover Lift Effect */
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    border: 1px solid rgba(212, 175, 55, 0.6);
+}
+
+/* Job Title */
+.job-card b {
+    font-size: 20px;
+    color: #d4af37;
+}
+
+/* Apply Link */
+.job-card a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background: linear-gradient(90deg, #d4af37, #f9d36b);
+    border-radius: 10px;
+    text-decoration: none;
+    color: #222;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.job-card a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.5);
+}
+
+/* Small text */
+.job-card small {
+    display: block;
+    margin-top: 8px;
+    color: #ccc;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* Horizontal rule */
+.job-card hr {
+    margin-top: 15px;
+    border: 0.5px solid rgba(212, 175, 55, 0.2);
+}
+
+/* No jobs message */
+.no-jobs {
+    padding: 20px;
+    background: rgba(255, 0, 0, 0.1);
+    border-left: 4px solid red;
+    color: #ffb3b3;
+    width: fit-content;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .job-card {
+        padding: 20px;
+    }
+}

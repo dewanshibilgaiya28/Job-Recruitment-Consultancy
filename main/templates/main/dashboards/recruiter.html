@@ -1,0 +1,51 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'main/css/dashboards/recruiter.css' %}">
+
+{% if user.is_authenticated and user.stakeholder %}
+    {% if user.stakeholder.role == "RECRUITER" or user.stakeholder.role == "OWNER" or user.stakeholder.role == "DEV_QA" %}
+
+    <h1 class="recruiter-title">Recruiter Dashboard</h1>
+
+    <ul class="recruiter-list">
+
+        <li>
+            <a href="{% url 'recruiter_applications' %}">
+                <h3>Schedule Interviews</h3>
+                <p>Manage candidate interviews and hiring progress.</p>
+            </a>
+        </li>
+
+        <li>
+            <a href="/reports/pipeline/">
+                <h3>Candidate Pipeline Report</h3>
+                <p>Track candidate stages and recruitment flow.</p>
+            </a>
+        </li>
+
+        <li>
+            <a href="/reports/recruiter-performance/">
+                <h3>Recruiter Performance Report</h3>
+                <p>Analyze recruiter productivity and KPIs.</p>
+            </a>
+        </li>
+
+        <li>
+            <a href="/reports/client-placements/">
+                <h3>Client Placements Report</h3>
+                <p>View successful placements and hiring summaries.</p>
+            </a>
+        </li>
+
+    </ul>
+
+    {% else %}
+    <p class="unauthorized">You are not authorized to view this page.</p>
+    {% endif %}
+{% else %}
+    <p class="unauthorized">You are not authorized to view this page.</p>
+{% endif %}
+
+{% endblock %}

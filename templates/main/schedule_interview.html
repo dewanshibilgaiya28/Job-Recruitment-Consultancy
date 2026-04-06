@@ -1,0 +1,87 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Schedule Interview{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Schedule Interview</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <h6>Candidate: <strong>{{ application.candidate.get_full_name }}</strong></h6>
+                        <p class="mb-0">Position: <strong>{{ application.job.title }}</strong></p>
+                    </div>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="interview_type" class="form-label">Interview Type</label>
+                            <select class="form-select" id="interview_type" name="interview_type" required>
+                                <option value="">Select Type</option>
+                                <option value="phone">Phone Interview</option>
+                                <option value="video">Video Interview</option>
+                                <option value="in-person">In-Person Interview</option>
+                                <option value="group">Group Interview</option>
+                            </select>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="date" class="form-label">Interview Date</label>
+                                <input type="date" class="form-control" id="date" name="date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="time" class="form-label">Interview Time</label>
+                                <input type="time" class="form-control" id="time" name="time" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="duration" class="form-label">Duration (minutes)</label>
+                            <input type="number" class="form-control" id="duration" name="duration" min="15" value="30" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Interview Location / Meeting Link</label>
+                            <input type="text" class="form-control" id="location" name="location" placeholder="e.g., Conference Room A or https://zoom.us/..." required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="interviewer" class="form-label">Interviewer Name</label>
+                            <input type="text" class="form-control" id="interviewer" name="interviewer" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="interviewer_email" class="form-label">Interviewer Email</label>
+                            <input type="email" class="form-control" id="interviewer_email" name="interviewer_email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Interview Notes</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Any additional information or instructions for the candidate..."></textarea>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="send_email" name="send_email" checked>
+                            <label class="form-check-label" for="send_email">
+                                Send invitation email to candidate
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'recruiter_applications' %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-info text-white">Schedule Interview</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

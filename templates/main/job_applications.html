@@ -1,0 +1,109 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Job Applications{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Applications for: <strong>{{ job.title }}</strong></h2>
+            <p class="text-muted">Posted on {{ job.created_at|date:"M d, Y" }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary">View Job</a>
+            <a href="{% url 'client_dashboard' %}" class="btn btn-outline-secondary">Dashboard</a>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">Total Applications</h6>
+                    <h3 class="mb-0">{{ applications.count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">Under Review</h6>
+                    <h3 class="mb-0 text-primary">{{ under_review }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">Interviews Scheduled</h6>
+                    <h3 class="mb-0 text-success">{{ interviews_scheduled }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Recent Applications</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{ application.candidate.get_full_name }}</td>
+                        <td>{{ application.candidate.user.email }}</td>
+                        <td>{{ application.candidate.phone }}</td>
+                        <td>{{ application.applied_at|date:"M d, Y" }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if application.status == 'APPLIED' %}bg-secondary
+                                {% elif application.status == 'SHORTLISTED' %}bg-info
+                                {% elif application.status == 'INTERVIEWED' %}bg-primary
+                                {% elif application.status == 'SELECTED' %}bg-success
+                                {% elif application.status == 'REJECTED' %}bg-danger
+                                {% endif %}">
+                                {{ application.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'application_detail' application.id %}" class="btn btn-sm btn-info">View</a>
+                            {% if can_schedule %}
+                                <a href="{% url 'schedule_interview' application.id %}" class="btn btn-sm btn-success">Schedule</a>
+                            {% endif %}
+                            <a href="{% url 'client_feedback' application.id %}" class="btn btn-sm btn-outline-primary">Feedback</a>
+                            {% if can_update_status %}
+                                <div class="btn-group btn-sm" role="group">
+                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">More</button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'update_status' application.id 'SHORTLISTED' %}">Shortlist</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'update_status' application.id 'REJECTED' %}">Reject</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="mailto:{{ application.candidate.user.email }}">Send Message</a></li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">No applications yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

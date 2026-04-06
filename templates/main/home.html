@@ -1,0 +1,264 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}GuessSharp | Staffing & Workforce Solutions{% endblock %}
+{% block body_class %}home-body{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'main/css/home.css' %}">
+{% endblock %}
+
+{% block main %}
+<section class="home-hero">
+    <div class="container-fluid site-container hero-inner">
+        <div class="hero-visual">
+            <div class="hero-graphic">
+                <div class="hero-ring"></div>
+                <div class="hero-ring ring-small"></div>
+                <div class="hero-number">6</div>
+            </div>
+        </div>
+        <div class="hero-copy">
+            <span class="hero-tag">Guess Certified as</span>
+            <h1>GREAT PLACE TO WORK</h1>
+            <p>for the 6th Consecutive Year!</p>
+            <a class="btn btn-warning" href="{% url 'company_profile' %}">Read more</a>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="home-section about-section">
+    <div class="container-fluid site-container about-grid">
+        <div class="about-image">
+            <div class="about-avatar"></div>
+            <div class="about-avatar small"></div>
+        </div>
+        <div class="about-copy">
+            <span class="section-tag">About Us</span>
+            <h2>A globally trusted leader in staffing solutions</h2>
+            <p>Guess Corp Limited is India’s largest and a global leader in staffing and workforce solutions, leveraging extensive domain knowledge and future-ready platforms.</p>
+            <a class="btn btn-warning" href="#differentiators">Read more</a>
+        </div>
+    </div>
+</section>
+
+<section id="differentiators" class="home-section differentiators">
+    <div class="container-fluid site-container">
+        <div class="section-header">
+            <span class="section-tag">Why Choose Us</span>
+            <h2>Key Differentiators</h2>
+        </div>
+        <div class="differentiator-grid">
+            <article class="diff-card">
+                <div class="diff-icon"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
+                <h3>Scale</h3>
+                <p>Scale that delivers</p>
+                <ul>
+                    <li>National Footprint: 30+ offices across India</li>
+                    <li>Recruitment Strength: 700+ recruiters</li>
+                    <li>Clientele: 3,000+</li>
+                    <li>Workforce Managed: 460k+ associates</li>
+                    <li>New Associates Added: 165k+</li>
+                </ul>
+            </article>
+            <article class="diff-card">
+                <div class="diff-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Agility</h3>
+                <p>Speed meets precision</p>
+                <ul>
+                    <li>Industries Served: IT, Manufacturing, Retail, BFSI, Healthcare</li>
+                    <li>Peak Demand Handling: Ability to source 26k+ associates in a month</li>
+                    <li>Deep Reach: 66% associates hired from Tier 2/3 cities</li>
+                    <li>Compliance Expertise: 100% adherence</li>
+                </ul>
+            </article>
+            <article class="diff-card">
+                <div class="diff-icon"><i class="fa-solid fa-microchip"></i></div>
+                <h3>Technology</h3>
+                <p>Powered by innovation</p>
+                <ul>
+                    <li>Proprietary software to mobilize and manage talent</li>
+                    <li>Digital ecosystem: ATS, onboarding, payroll, benefits</li>
+                    <li>Digital-first lifecycle management with Hamara suite</li>
+                </ul>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section id="technology" class="home-section tech-section">
+    <div class="container-fluid site-container">
+        <div class="section-header">
+            <span class="section-tag">Technology</span>
+            <h2>Driving excellence and efficiency</h2>
+        </div>
+        <div class="tech-logos">
+            <div class="logo-pill">Hamara HR</div>
+            <div class="logo-pill">Hamara Jobs</div>
+            <div class="logo-pill">Hamara Benefits</div>
+            <div class="logo-pill">Hamara Academy</div>
+            <div class="logo-pill">TaskMo</div>
+        </div>
+    </div>
+</section>
+
+<section id="customers" class="home-section customer-section">
+    <div class="container-fluid site-container">
+        <div class="section-header light">
+            <span class="section-tag">We Work With The Best</span>
+            <h2>Delighting every customer</h2>
+        </div>
+        <div class="customer-grid">
+            <article class="story-card">
+                <div class="story-image story-one"></div>
+                <div class="story-body">
+                    <h4>Migrated 26,000 employees in 9 days</h4>
+                    <p>to a refreshed ecosystem</p>
+                    <a href="{% url 'case_studies' %}" class="text-link">Read more</a>
+                </div>
+            </article>
+            <article class="story-card">
+                <div class="story-image story-two"></div>
+                <div class="story-body">
+                    <h4>Customer engagement upturn in 6 months</h4>
+                    <p>by Guess associates</p>
+                    <a href="{% url 'case_studies' %}" class="text-link">Read more</a>
+                </div>
+            </article>
+            <article class="story-card">
+                <div class="story-image story-three"></div>
+                <div class="story-body">
+                    <h4>Sourced high-quality candidates</h4>
+                    <p>and enabled zero offer-drops</p>
+                    <a href="{% url 'case_studies' %}" class="text-link">Read more</a>
+                </div>
+            </article>
+        </div>
+        <div class="center-action">
+            <a class="btn btn-warning" href="{% url 'job_list' %}">View More</a>
+        </div>
+    </div>
+</section>
+
+<section id="careers" class="home-section careers-section">
+    <div class="container-fluid site-container">
+        <div class="section-header">
+            <span class="section-tag">Stronger Together</span>
+            <h2>Spreading smiles and building sustainable relationships</h2>
+        </div>
+        <div class="tile-grid">
+            <a class="info-tile" href="{% url 'investors' %}">
+                <div class="tile-image tile-investor"></div>
+                <div class="tile-footer">
+                    <span>Investor</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+            <a class="info-tile" href="{% url 'job_list' %}">
+                <div class="tile-image tile-careers"></div>
+                <div class="tile-footer">
+                    <span>Careers</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+            <a class="info-tile" href="{% url 'media' %}">
+                <div class="tile-image tile-media"></div>
+                <div class="tile-footer">
+                    <span>Media</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="home-section jobs-section">
+    <div class="container-fluid site-container">
+        <div class="section-header">
+            <span class="section-tag">Latest Roles</span>
+            <h2>Open opportunities</h2>
+        </div>
+        {% if jobs %}
+            <div class="jobs-grid">
+                {% for job in jobs %}
+                    <article class="job-card">
+                        <h4>{{ job.title }}</h4>
+                        <p class="job-company">{{ job.client.company_name }}</p>
+                        <p class="job-desc">{{ job.description|truncatewords:20 }}</p>
+                        <div class="job-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
+                            <a href="{% url 'job_detail' job.id %}" class="text-link">View</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">No jobs available right now.</div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<footer class="home-footer">
+    <div class="container-fluid site-container footer-grid">
+        <div>
+            <h5>ABOUT US</h5>
+            <ul>
+                <li><a href="{% url 'company_profile' %}">Company Profile</a></li>
+                <li><a href="{% url 'leadership' %}">Leadership</a></li>
+                <li><a href="{% url 'csr' %}">CSR</a></li>
+                <li><a href="{% url 'sustainability' %}">Sustainability</a></li>
+            </ul>
+        </div>
+        <div>
+            <h5>SERVICES</h5>
+            <ul>
+                <li><a href="{% url 'services_general_staffing' %}">General Staffing</a></li>
+                <li><a href="{% url 'services_professional_staffing' %}">Professional Staffing</a></li>
+                <li><a href="{% url 'services_digital_platform' %}">Digital Platform</a></li>
+                <li><a href="{% url 'services_gcc' %}">Global Capability Centers</a></li>
+            </ul>
+        </div>
+        <div>
+            <h5>RESOURCES</h5>
+            <ul>
+                <li><a href="{% url 'blogs' %}">Blogs</a></li>
+                <li><a href="{% url 'case_studies' %}">Case Studies</a></li>
+                <li><a href="{% url 'knowledge_base' %}">Knowledge Base</a></li>
+                <li><a href="{% url 'job_list' %}">Careers</a></li>
+                <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+            </ul>
+        </div>
+        <div>
+            <h5>Guess WORLDWIDE</h5>
+            <div class="footer-select">
+                <select>
+                    <option>Select a Country/Region</option>
+                    <option>India</option>
+                    <option>US</option>
+                    <option>APAC</option>
+                </select>
+            </div>
+            <div class="footer-social">
+                <span>Follow Us On :</span>
+                <div class="social-icons">
+                    <i class="fa-brands fa-linkedin"></i>
+                    <i class="fa-brands fa-x-twitter"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom-bar">
+        <div class="container-fluid site-container">
+            <div class="footer-links">
+                <a href="#">Disclaimer</a>
+                <a href="#">Privacy Notice</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+            <div class="footer-copy">© 2026 Guess Corp Limited. All rights reserved.</div>
+        </div>
+    </div>
+</footer>
+{% endblock %}

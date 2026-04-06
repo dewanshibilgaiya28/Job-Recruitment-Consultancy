@@ -1,0 +1,31 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'main/css/dashboards/candidate.css' %}">
+
+
+{% if user.is_authenticated and user.candidate %}
+
+    <h1 class="dashboard-title">Candidate Dashboard</h1>
+
+    <ul class="dashboard-list">
+        <li>
+            <a href="{% url 'job_list' %}">
+                <h3>Browse Jobs</h3>
+                <p>Explore premium job opportunities tailored for you.</p>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'my_applications' %}">
+                <h3>My Applications</h3>
+                <p>Track your applications and hiring progress.</p>
+            </a>
+        </li>
+    </ul>
+
+{% else %}
+    <p class="unauthorized">You are not authorized to view this page.</p>
+{% endif %}
+
+{% endblock %}

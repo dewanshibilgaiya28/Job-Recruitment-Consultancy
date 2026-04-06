@@ -1,0 +1,182 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ request.POST.username|default:user.username }}" required>
+                            <small class="text-muted">This username is used for login.</small>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ request.POST.first_name|default:user.first_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ request.POST.last_name|default:user.last_name }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ request.POST.email|default:user.email }}" required>
+                        </div>
+
+                        {% comment %} Render the candidate ModelForm (includes phone, skills, experience, resume, profile_picture) {% endcomment %}
+                        {% if form %}
+                            <div class="profile-section mb-3">
+                                <h5>Candidate Details</h5>
+
+                                <div class="mb-3">
+                                    <label class="form-label">User Type</label>
+                                    <input type="text" class="form-control" value="Candidate" readonly>
+                                    <small class="text-muted">User type is managed from admin panel.</small>
+                                </div>
+
+                                {% if form.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>Please correct the following:</strong>
+                                        <ul class="mb-0 mt-2">
+                                            {% for field, errors in form.errors.items %}
+                                                {% for error in errors %}
+                                                    <li>
+                                                        {% if field == "__all__" %}
+                                                            {{ error }}
+                                                        {% else %}
+                                                            {{ field|capfirst }}: {{ error }}
+                                                        {% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
+                                {{ form.as_p }}
+                            </div>
+                        {% elif client %}
+                            <div class="profile-section">
+                                <h3>Company Details</h3>
+
+                                <div class="mb-3">
+                                    <label class="form-label">User Type</label>
+                                    <input type="text" class="form-control" value="Employer" readonly>
+                                    <small class="text-muted">User type is managed from admin panel.</small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Company Logo</label>
+                                    {% if client.company_logo %}
+                                        <div class="mb-2">
+                                            <img src="{{ client.company_logo.url }}" alt="Company logo" class="rounded-circle" style="height:72px;width:72px;object-fit:cover;border:3px solid #e9ecef;">
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" class="form-control" name="company_logo" accept="image/*">
+                                    <small class="text-muted">Shown next to company name in dashboard</small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Personal Profile Photo</label>
+                                    {% if client.profile_picture %}
+                                        <div class="mb-2">
+                                            <img src="{{ client.profile_picture.url }}" alt="Profile photo" class="rounded-circle" style="height:72px;width:72px;object-fit:cover;border:3px solid #e9ecef;">
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" class="form-control" name="profile_picture" accept="image/*">
+                                    <small class="text-muted">Shown in navbar near logout button</small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Company name</label>
+                                    <input type="text" class="form-control" name="company_name" value="{{ request.POST.company_name|default:client.company_name }}" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="text" class="form-control" name="contact_number" value="{{ request.POST.contact_number|default:client.contact_number }}" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" value="Not applicable" readonly>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Skills</label>
+                                    <textarea class="form-control" rows="3" readonly>Not applicable</textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Experience</label>
+                                    <input type="text" class="form-control" value="Not applicable" readonly>
+                                </div>
+                            </div>
+                        {% elif stakeholder %}
+                            <div class="profile-section">
+                                <h3>Recruiter Details</h3>
+
+                                <div class="mb-3">
+                                    <label class="form-label">User Type</label>
+                                    <input type="text" class="form-control" value="{{ stakeholder.get_role_display|default:stakeholder.role }}" readonly>
+                                    <small class="text-muted">User type is managed from admin panel.</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Profile Photo</label>
+                                    {% if stakeholder.profile_picture %}
+                                        <div class="mb-2">
+                                            <img src="{{ stakeholder.profile_picture.url }}" alt="Profile photo" class="rounded-circle" style="height:72px;width:72px;object-fit:cover;border:3px solid #e9ecef;">
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" class="form-control" name="profile_picture" accept="image/*">
+                                    <small class="text-muted">Shown in recruiter dashboard and navbar</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="text" class="form-control" name="phone" value="{{ request.POST.phone|default:stakeholder.phone|default:'' }}" placeholder="Enter phone number">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" name="location" value="{{ request.POST.location|default:stakeholder.location|default:'' }}" placeholder="Enter location">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Skills</label>
+                                    <textarea class="form-control" name="skills" rows="3" placeholder="Enter key skills">{{ request.POST.skills|default:stakeholder.skills|default:'' }}</textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Experience (years)</label>
+                                    <input type="number" min="0" class="form-control" name="experience" value="{{ request.POST.experience|default:stakeholder.experience|default_if_none:'' }}" placeholder="e.g. 5">
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

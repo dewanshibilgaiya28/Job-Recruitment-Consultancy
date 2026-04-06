@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Job Recruitment Consultancy{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="{% url 'favicon' %}" type="image/svg+xml">
+    <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="site-body {% block body_class %}{% endblock %}">
+    <header class="site-header">
+        <div class="top-contact-bar">
+            <div class="container-fluid site-container top-contact-inner">
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>+1 (415) 555-0183</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>hello@quesscorp.com</span>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg site-navbar">
+            <div class="container-fluid site-container">
+                <a class="navbar-brand brand-mark" href="{% url 'home' %}">
+                    <img src="{% static 'main/img/brand-logo.svg' %}" alt="QuessCorp" class="brand-logo">
+                    <span class="brand-name">GuessSharp</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto nav-primary-links">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'job_list' %}">Jobs</a></li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+                        {% endif %}
+                        {% if user.is_authenticated and user.client %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'job_post' %}">Post a Job</a></li>
+                        {% endif %}
+                        {% if user.is_authenticated and user.candidate %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'my_applications' %}">Applications</a></li>
+                        {% endif %}
+                        {% if user.is_authenticated and user.stakeholder %}
+                            {% if user.stakeholder.role == "RECRUITER" or user.stakeholder.role == "OWNER" or user.stakeholder.role == "DEV_QA" %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'recruiter_applications' %}">Hiring Pipeline</a></li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto nav-user-links">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link profile-chip" href="{% url 'profile' %}">
+                                    {% if user.stakeholder and user.stakeholder.profile_picture %}
+                                        <img src="{{ user.stakeholder.profile_picture.url }}" alt="{{ user.username }}" class="nav-user-avatar rounded-circle">
+                                    {% elif user.client and user.client.profile_picture %}
+                                        <img src="{{ user.client.profile_picture.url }}" alt="{{ user.username }}" class="nav-user-avatar rounded-circle">
+                                    {% elif user.candidate and user.candidate.profile_picture %}
+                                        <img src="{{ user.candidate.profile_picture.url }}" alt="{{ user.username }}" class="nav-user-avatar rounded-circle">
+                                    {% else %}
+                                        <i class="fas fa-user-circle nav-user-avatar-icon"></i>
+                                    {% endif %}
+                                    <span>{{ user.get_full_name|default:user.username }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary nav-cta" href="{% url 'candidate_register' %}">Sign Up</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    {% if messages %}
+        <div class="container-fluid mt-3 notifications-wrap">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="site-main">
+        {% block main %}
+            {% block hero %}{% endblock %}
+            <div class="container-fluid site-container page-shell">
+                <div class="row g-4">
+                    {% block sidebar %}{% endblock %}
+                    <div class="col content-area">
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </main>
+
+    {% block footer %}
+        <footer class="site-footer">
+            <div class="container-fluid site-container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <h5>QuessCorp Recruitment</h5>
+                        <p>Build standout teams with clarity, speed, and confidence.</p>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <h6>Explore</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'job_list' %}">Open Roles</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <h6>Hiring</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'job_post' %}">Post a Job</a></li>
+                            <li><a href="{% url 'client_register' %}">Employer Sign Up</a></li>
+                            <li><a href="{% url 'login' %}">Client Login</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <h6>Stay in the loop</h6>
+                        <p>Get weekly updates on new roles and hiring events.</p>
+                        <form class="d-flex gap-2" method="post" action="#">
+                            <input type="email" class="form-control" placeholder="Email address">
+                            <button type="button" class="btn btn-outline-primary">Notify me</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <span>© 2026 QuessCorp Recruitment. All rights reserved.</span>
+                    <span>Talent and hiring, reimagined.</span>
+                </div>
+            </div>
+        </footer>
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

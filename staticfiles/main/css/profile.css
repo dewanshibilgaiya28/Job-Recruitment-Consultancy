@@ -1,0 +1,16 @@
+/* Profile page */
+.profile-wrapper .profile-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    border-left: 4px solid #d4af37;
+}
+.profile-wrapper .profile-section h2 {
+    font-size: 18px;
+    color: #d4af37;
+    margin-bottom: 12px;
+}
+.profile-wrapper .profile-section p { margin: 8px 0; }
+.profile-actions { margin-top: 25px; }
+.profile-actions .apply-btn { text-decoration: none; }

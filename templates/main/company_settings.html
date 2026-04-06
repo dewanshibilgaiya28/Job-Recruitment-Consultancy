@@ -1,0 +1,79 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Company Settings{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Company Settings</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="company_name" class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="company_name" name="company_name" value="{{ client.company_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contact_number" class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ client.contact_number }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company_logo" class="form-label fw-bold">Company Logo</label>
+                            {% if client.company_logo %}
+                                <div class="mb-2">
+                                    <img src="{{ client.company_logo.url }}" alt="Company logo" class="rounded-circle" style="height:56px;width:56px;object-fit:cover;border:3px solid #e9ecef;">
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info py-2 mb-2">
+                                    <small><i class="fas fa-info-circle"></i> Company logo will appear next to your company name in the dashboard</small>
+                                </div>
+                            {% endif %}
+                            <input type="file" class="form-control" id="company_logo" name="company_logo" accept="image/*">
+                            <small class="text-muted">Your company/organization logo (shown in dashboard header)</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="profile_picture" class="form-label fw-bold">Personal Profile Photo</label>
+                            {% if client.profile_picture %}
+                                <div class="mb-2">
+                                    <img src="{{ client.profile_picture.url }}" alt="Profile photo" class="rounded-circle" style="height:56px;width:56px;object-fit:cover;border:3px solid #e9ecef;">
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info py-2 mb-2">
+                                    <small><i class="fas fa-info-circle"></i> Your photo will appear in the navigation bar near logout button</small>
+                                </div>
+                            {% endif %}
+                            <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*">
+                            <small class="text-muted">Your personal photo (shown in navbar)</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Account Email</label>
+                            <input type="email" class="form-control" value="{{ client.user.email }}" disabled>
+                            <small class="text-muted">Contact support to change email</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Member Since</label>
+                            <input type="text" class="form-control" value="{{ client.created_at|date:'M d, Y' }}" disabled>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a href="{% url 'client_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Job Listings - Recruitment Platform{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Available Jobs</h1>
+            <p class="text-muted">Find your next opportunity</p>
+        </div>
+        <div class="col-md-4">
+            <form method="GET" action="{% url 'job_search' %}" class="d-flex gap-2">
+                <input type="text" name="q" class="form-control" placeholder="Search jobs..." value="{{ request.GET.q|default:'' }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
+    {% if jobs %}
+        <div class="row">
+            {% for job in jobs %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'job_detail' job.id %}" class="text-decoration-none">
+                                    {{ job.title }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted">{{ job.client.company_name }}</p>
+                            <p class="card-text">{{ job.description|truncatewords:20 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">{{ job.location }}</small>
+                                <a href="{% url 'job_detail' job.id %}" class="btn btn-primary btn-sm">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No jobs found</div>
+    {% endif %}
+</div>
+{% endblock %}

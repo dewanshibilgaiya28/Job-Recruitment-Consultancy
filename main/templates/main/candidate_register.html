@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Registration</title>
+
+    <!-- Google Fonts for Luxury Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'main/css/candidate_register.css' %}">
+
+</head>
+<body>
+
+    <div>
+        <h2>Candidate Registration</h2>
+        {% if messages %}
+            <div class="form-errors">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            
+            <label>Username</label>
+            <input name="username" type="text" placeholder="Enter username" value="{{ form_data.username|default:'' }}">
+
+            <label>Password</label>
+            <input name="password" type="password" placeholder="Enter password">
+
+            <label>Phone</label>
+            <input name="phone" type="text" placeholder="Enter phone number" value="{{ form_data.phone|default:'' }}">
+
+            <label>Skills</label>
+            <input name="skills" type="text" placeholder="Enter skills" value="{{ form_data.skills|default:'' }}">
+
+            <label>Experience</label>
+            <input name="experience" type="text" placeholder="Enter experience" value="{{ form_data.experience|default:'' }}">
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+</body>
+</html>

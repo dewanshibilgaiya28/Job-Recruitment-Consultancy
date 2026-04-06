@@ -1,0 +1,44 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/reports/pipeline.css' %}">
+
+<div class="pipeline-wrapper">
+    <h2 class="pipeline-title">Candidate Pipeline</h2>
+    <p class="pipeline-subtext">
+        Pipeline analytics and recruitment stage insights based on live data.
+    </p>
+
+    <div class="pipeline-card">
+        <div class="pipeline-stats">
+
+            <div class="stat-box">
+                <div class="stat-number">{{ pipeline.applied }}</div>
+                <div class="stat-label">Applied</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-number">{{ pipeline.shortlisted }}</div>
+                <div class="stat-label">Shortlisted</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-number">{{ pipeline.interviewed }}</div>
+                <div class="stat-label">Interviewed</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-number">{{ pipeline.selected }}</div>
+                <div class="stat-label">Selected</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-number">{{ pipeline.rejected }}</div>
+                <div class="stat-label">Rejected</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

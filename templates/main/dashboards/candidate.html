@@ -1,0 +1,155 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Candidate Dashboard - Recruitment Platform{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>Candidate Dashboard</h1>
+    <div class="d-flex align-items-center mb-3">
+        {% if user.candidate and user.candidate.profile_picture %}
+            <img src="{{ user.candidate.profile_picture.url }}" class="rounded-circle me-3" style="height:48px;width:48px;object-fit:cover;">
+        {% else %}
+            <i class="fas fa-user-circle fa-2x me-3"></i>
+        {% endif %}
+        <div>
+            <h4 class="mb-0">{{ user.get_full_name|default:user.username }}</h4>
+            <small class="text-muted">Member since {{ user.date_joined|date:'M Y' }}</small>
+        </div>
+    </div>
+
+    <form method="get" class="d-flex flex-wrap gap-2 mb-4">
+        <input
+            type="search"
+            name="q"
+            value="{{ q|default:'' }}"
+            class="form-control"
+            placeholder="Search jobs by title, company, or location..."
+        >
+        <select name="job_type" class="form-select" style="max-width: 220px;">
+            <option value="" {% if not job_type_filter %}selected{% endif %}>All Job Types</option>
+            {% for job_type in job_type_options %}
+                <option value="{{ job_type }}" {% if job_type_filter == job_type %}selected{% endif %}>{{ job_type }}</option>
+            {% endfor %}
+        </select>
+        <input
+            type="text"
+            name="location"
+            value="{{ location_filter|default:'' }}"
+            class="form-control"
+            style="max-width: 240px;"
+            placeholder="Filter by location"
+        >
+        <select name="time_filter" class="form-select" style="max-width: 220px;">
+            {% for value, label in time_filter_options %}
+                <option value="{{ value }}" {% if time_filter == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if q or job_type_filter or location_filter or time_filter != "all" %}
+            <a href="{% url 'candidate_dashboard' %}" class="btn btn-outline-secondary">Clear</a>
+        {% endif %}
+    </form>
+
+    {% if show_job_results %}
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Search Results</h5>
+            <a href="{% url 'job_list' %}?q={{ q|urlencode }}" class="btn btn-sm btn-outline-primary">View All Jobs</a>
+        </div>
+        <div class="card-body">
+            {% if job_search_results %}
+                <div class="list-group list-group-flush">
+                    {% for job in job_search_results %}
+                        <a href="{% url 'job_detail' job.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ job.title }}</strong>
+                                <div class="text-muted small">{{ job.client.company_name }}{% if job.location %} • {{ job.location }}{% endif %}</div>
+                            </div>
+                            <span class="badge bg-primary">View</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">No jobs found for selected search/filter criteria.</p>
+            {% endif %}
+        </div>
+        {% if jobs_page_obj and jobs_page_obj.has_other_pages %}
+        <div class="card-footer bg-white">
+            <nav aria-label="Candidate job results pagination">
+                <ul class="pagination pagination-sm mb-0 justify-content-end">
+                    <li class="page-item {% if not jobs_page_obj.has_previous %}disabled{% endif %}">
+                        <a class="page-link" href="?q={{ q|urlencode }}&job_type={{ job_type_filter|urlencode }}&location={{ location_filter|urlencode }}&time_filter={{ time_filter|urlencode }}&jobs_page={% if jobs_page_obj.has_previous %}{{ jobs_page_obj.previous_page_number }}{% else %}1{% endif %}">Previous</a>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ jobs_page_obj.number }} of {{ jobs_page_obj.paginator.num_pages }}</span>
+                    </li>
+                    <li class="page-item {% if not jobs_page_obj.has_next %}disabled{% endif %}">
+                        <a class="page-link" href="?q={{ q|urlencode }}&job_type={{ job_type_filter|urlencode }}&location={{ location_filter|urlencode }}&time_filter={{ time_filter|urlencode }}&jobs_page={% if jobs_page_obj.has_next %}{{ jobs_page_obj.next_page_number }}{% else %}{{ jobs_page_obj.paginator.num_pages }}{% endif %}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="card-title">My Applications</h6>
+                    <h2 class="card-text">{{ my_applications_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="card-title">Interviews</h6>
+                    <h2 class="card-text">{{ interviews_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="card-title">Offers</h6>
+                    <h2 class="card-text">{{ offers_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="card-title">Profile Strength</h6>
+                    <h2 class="card-text">{{ profile_strength }}%</h2>
+                    <div class="progress mt-2" style="height:8px;background: rgba(255,255,255,0.08);border-radius:6px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ profile_strength }}%; height:8px; border-radius:6px;" aria-valuenow="{{ profile_strength }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'job_list' %}" class="btn btn-primary me-2">
+                        <i class="fas fa-search"></i> Browse Jobs
+                    </a>
+                    <a href="{% url 'my_applications' %}" class="btn btn-info me-2">
+                        <i class="fas fa-file-alt"></i> My Applications
+                    </a>
+                    <a href="{% url 'profile_edit' %}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Update Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "main/base.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'main/css/reports/recruiter_performance.css' %}">
+
+<div class="performance-wrapper">
+    <h2 class="performance-title">Recruiter Performance</h2>
+
+    {% for recruiter in data %}
+        <div class="performance-card">
+
+            <div class="recruiter-name">
+                👤 {{ recruiter.user.username }}
+            </div>
+
+            <div class="performance-stats">
+
+                <div class="stat-box">
+                    <div class="stat-number">
+                        {{ recruiter.placements }}
+                    </div>
+                    <div class="stat-label">Successful Placements</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-number">
+                        {{ recruiter.user.interview_set.count }}
+                    </div>
+                    <div class="stat-label">Interviews Conducted</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-number">
+                        {{ recruiter.user.interview_set.count|default:0 }}
+                    </div>
+                    <div class="stat-label">Total Interviews</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-number">
+                        {% if recruiter.user.interview_set.count > 0 %}
+                            {{ recruiter.placements|floatformat:0 }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </div>
+                    <div class="stat-label">Hire Score</div>
+                </div>
+
+            </div>
+        </div>
+    {% empty %}
+        <p class="no-data">No recruiter performance data available</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

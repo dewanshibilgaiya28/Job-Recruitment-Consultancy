@@ -1,0 +1,31 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/job_detail.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/apply_job.css' %}">
+<div class="job-wrapper apply-job-wrapper">
+    <h1 class="job-title">{{ job.title }}</h1>
+    <p class="apply-job-company"><strong>Company:</strong> {{ job.client.company_name }}</p>
+
+    <p class="apply-job-notice">You must upload your resume to apply for this job. Applications without a resume cannot be submitted.</p>
+
+    <form method="post" enctype="multipart/form-data" class="apply-job-form">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <ul class="form-errors">
+                {% for err in form.non_field_errors %}<li>{{ err }}</li>{% endfor %}
+            </ul>
+        {% endif %}
+        <div class="form-group">
+            <label for="id_resume">{{ form.resume.label }}</label>
+            {{ form.resume }}
+            {% if form.resume.help_text %}<span class="help-text">{{ form.resume.help_text }}</span>{% endif %}
+            {% if form.resume.errors %}<ul class="field-errors">{% for e in form.resume.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="apply-btn">Submit Application</button>
+            <a href="{% url 'job_detail' job.id %}" class="cancel-link">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

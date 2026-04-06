@@ -1,0 +1,26 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/job_detail.css' %}">
+<div class="job-wrapper">
+    <h1 class="job-title">{{ job.title }}</h1>
+
+    <div class="job-info">
+        <p><strong>Company:</strong> {{ job.client.company_name }}</p>
+        <p><strong>Location:</strong> {{ job.location }}</p>
+        <p><strong>Type:</strong> {{ job.job_type }}</p>
+        <p><strong>Salary:</strong> {{ job.salary }}</p>
+    </div>
+
+    <div class="job-description">
+        <p>{{ job.description }}</p>
+    </div>
+
+    {% if user.is_authenticated and user.candidate %}
+        <a href="{% url 'apply_job' job.id %}" class="apply-btn">Apply Now</a>
+    {% else %}
+        <p class="login-notice">Please login as candidate to apply</p>
+    {% endif %}
+</div>
+
+{% endblock %}

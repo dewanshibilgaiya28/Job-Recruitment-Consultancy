@@ -1,0 +1,92 @@
+/* ===== CANDIDATE PIPELINE PAGE ===== */
+
+.pipeline-wrapper {
+    margin-top: 40px;
+}
+
+/* Luxury Heading */
+.pipeline-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    color: #d4af37;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.pipeline-title::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, #d4af37, transparent);
+}
+
+/* Description Text */
+.pipeline-subtext {
+    font-size: 16px;
+    color: #ddd;
+    margin-bottom: 30px;
+}
+
+/* Glass Analytics Card */
+.pipeline-card {
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    backdrop-filter: blur(12px);
+    transition: all 0.4s ease;
+}
+
+/* Hover Effect */
+.pipeline-card:hover {
+    transform: translateY(-6px);
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+}
+
+/* Stats Layout */
+.pipeline-stats {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.stat-box {
+    flex: 1;
+    min-width: 200px;
+    padding: 25px;
+    background: rgba(212, 175, 55, 0.08);
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    transition: 0.3s ease;
+}
+
+.stat-box:hover {
+    background: rgba(212, 175, 55, 0.15);
+    transform: scale(1.05);
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: 600;
+    color: #d4af37;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #ccc;
+    margin-top: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pipeline-card {
+        padding: 25px;
+    }
+}
